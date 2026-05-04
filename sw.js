@@ -1,4 +1,4 @@
-const CACHE_NAME = 'raman-dash-v2';
+const CACHE_NAME = 'raman-dash-v3';
 const ASSETS = [
   'index.html',
   'manifest.json',
