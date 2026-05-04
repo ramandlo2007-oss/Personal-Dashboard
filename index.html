@@ -69,11 +69,10 @@
     text-transform: uppercase;
   }
 
-  .logo span { color: var(--text-dim); font-size: 10px; letter-spacing: 4px; display: block; margin-top: -4px; font-family: 'Montserrat', sans-serif; }
-
   .nav-tabs {
     display: flex;
     gap: 4px;
+    margin-left: auto;
   }
 
   .nav-tab {
@@ -81,31 +80,98 @@
     border: 1px solid transparent;
     color: var(--text-dim);
     font-family: 'Montserrat', sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    padding: 10px 24px;
+    padding: 10px 20px;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
   }
 
-  .nav-tab:hover { color: var(--gold); border-color: var(--border); }
+  .nav-tab:hover { color: var(--gold); background: rgba(201,168,76,0.04); }
   .nav-tab.active {
     color: var(--gold);
-    border-color: var(--border-bright);
-    background: rgba(201,168,76,0.06);
+    border: 1px solid var(--border-bright);
+    background: rgba(201,168,76,0.08);
   }
 
-  .nav-tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--gold);
+  /* ===== HOME SCREEN ===== */
+  .home-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 60vh;
+    padding: 40px 0;
+  }
+
+  .home-greeting {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1.1;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+  }
+
+  .home-date {
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 40px;
+  }
+
+  .home-clock {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 120px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 60px;
+    text-shadow: 0 0 40px rgba(201,168,76,0.2);
+  }
+
+  .home-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .summary-card {
+    background: var(--black-2);
+    border: 1px solid var(--border);
+    padding: 32px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .summary-card:hover {
+    border-color: var(--gold);
+    background: var(--black-3);
+    transform: translateY(-4px);
+  }
+
+  .summary-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .summary-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
   }
 
   /* MAIN */
@@ -848,6 +914,13 @@
     .upload-zone {
       padding: 30px;
     }
+    
+    .home-hero { padding: 20px 0; }
+    .home-hero > div:first-child { flex-direction: column !important; gap: 24px !important; text-align: center; }
+    #weather-widget { border-left: none !important; border-bottom: 1px solid var(--border); padding: 0 0 16px 0 !important; }
+    .home-greeting { font-size: 36px; }
+    .home-clock { font-size: 80px; margin-bottom: 40px; }
+    .home-summary-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -859,7 +932,8 @@
     <span>Dashboard</span>
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('todos')">✦ Todos</button>
+    <button class="nav-tab active" onclick="switchTab('home')">✦ Home</button>
+    <button class="nav-tab" onclick="switchTab('todos')">✦ Todos</button>
     <button class="nav-tab" onclick="switchTab('docs')">✦ Dokumente</button>
     <button class="nav-tab" onclick="switchTab('calendar')">✦ Kalender</button>
     <button class="nav-tab" onclick="switchTab('notes')">✦ Notizen</button>
@@ -869,8 +943,55 @@
 
 <main>
 
+  <!-- ===== HOME ===== -->
+  <div class="section active" id="home">
+    <div class="home-hero">
+      <div style="display: flex; gap: 48px; align-items: center; margin-bottom: 20px;">
+        <div id="weather-widget" style="text-align: left; border-left: 1px solid var(--border); padding-left: 20px;">
+          <div id="weather-temp" style="font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--gold);">--°C</div>
+          <div id="weather-desc" style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim);">Wetter lädt...</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="home-greeting" id="home-greeting" style="margin-bottom: 0;">Guten Abend, Raman</div>
+          <div class="home-date" id="home-date" style="margin-bottom: 0;">Montag, 4. Mai 2026</div>
+        </div>
+      </div>
+      
+      <div class="home-clock" id="home-clock">22:45</div>
+      
+      <div class="home-summary-grid">
+        <div class="summary-card" onclick="switchTab('todos')">
+          <span class="summary-val" id="summary-todos">0</span>
+          <span class="summary-label">Offene Aufgaben</span>
+        </div>
+        <div class="summary-card" onclick="switchTab('calendar')">
+          <span class="summary-val" id="summary-events">0</span>
+          <span class="summary-label">Termine heute</span>
+        </div>
+        <div class="summary-card" onclick="switchTab('habits')">
+          <span class="summary-val" id="summary-habits">0%</span>
+          <span class="summary-label">Routinen erledigt</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 60px; width: 100%; max-width: 900px;">
+        <div class="ornament" style="margin-bottom: 32px;">— ✦ Entertainment Hub ✦ —</div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+          <a href="https://open.spotify.com" target="_blank" class="summary-card" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 20px;">
+            <span style="font-size: 24px;">🎧</span>
+            <span class="summary-label" style="margin: 0; color: var(--text);">Spotify öffnen</span>
+          </a>
+          <a href="https://www.youtube.com" target="_blank" class="summary-card" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 20px;">
+            <span style="font-size: 24px;">📺</span>
+            <span class="summary-label" style="margin: 0; color: var(--text);">YouTube öffnen</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== TODOS ===== -->
-  <div class="section active" id="todos">
+  <div class="section" id="todos">
     <div class="section-header">
       <div class="section-title">
         <small>Aufgaben</small>
@@ -1025,8 +1146,19 @@
     </div>
     
     <div class="todo-form">
-      <input class="input-gold" type="text" id="habit-input" placeholder="Neue Routine (z.B. Lesen, Workout, Lernen) …" onkeydown="if(event.key==='Enter') addHabit()">
+      <input class="input-gold" type="text" id="habit-input" placeholder="Eigene Routine eingeben (z.B. Lesen) …" onkeydown="if(event.key==='Enter') addHabit()">
       <button class="btn-gold" onclick="addHabit()">Hinzufügen</button>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <div class="summary-label" style="margin-bottom: 12px; opacity: 0.7;">Vorschläge:</div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn-outline" style="font-size: 9px; padding: 6px 12px;" onclick="addQuickHabit('💧 2L Wasser trinken')">+ Wasser</button>
+        <button class="btn-outline" style="font-size: 9px; padding: 6px 12px;" onclick="addQuickHabit('📖 30 Min. Lesen')">+ Lesen</button>
+        <button class="btn-outline" style="font-size: 9px; padding: 6px 12px;" onclick="addQuickHabit('🧘 Meditieren')">+ Meditation</button>
+        <button class="btn-outline" style="font-size: 9px; padding: 6px 12px;" onclick="addQuickHabit('🏋️ Sport machen')">+ Sport</button>
+        <button class="btn-outline" style="font-size: 9px; padding: 6px 12px;" onclick="addQuickHabit('🍎 Gesund essen')">+ Ernährung</button>
+      </div>
     </div>
 
     <div id="habits-list" style="display:flex; flex-direction:column; gap:12px;"></div>
@@ -1110,7 +1242,10 @@ let currentFilter = 'all';
 let calDate = new Date();
 let selectedDate = null;
 
-function save() { localStorage.setItem('aurum-state', JSON.stringify(state)); }
+function save() { 
+  localStorage.setItem('aurum-state', JSON.stringify(state)); 
+  updateHome();
+}
 
 // ===== NAV =====
 function switchTab(tab) {
@@ -1848,6 +1983,95 @@ renderFiles();
 renderCalendar();
 renderNotes();
 renderHabits();
+updateHome();
+fetchWeather();
+
+// ===== WEATHER JS =====
+async function fetchWeather() {
+  try {
+    // Default to Berlin if geo fails
+    let lat = 52.52;
+    let lon = 13.41;
+    
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        lat = pos.coords.latitude;
+        lon = pos.coords.longitude;
+        updateWeather(lat, lon);
+      }, () => updateWeather(lat, lon));
+    } else {
+      updateWeather(lat, lon);
+    }
+  } catch (e) { console.error(e); }
+}
+
+async function updateWeather(lat, lon) {
+  const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+  const data = await res.json();
+  if (data.current_weather) {
+    document.getElementById('weather-temp').textContent = Math.round(data.current_weather.temperature) + "°C";
+    const codes = {
+      0: "Klarer Himmel", 1: "Überwiegend klar", 2: "Teils bewölkt", 3: "Bedeckt",
+      45: "Neblig", 48: "Raureifnebel", 51: "Leichter Niesel", 61: "Leichter Regen",
+      71: "Leichter Schneefall", 95: "Gewitter"
+    };
+    document.getElementById('weather-desc').textContent = codes[data.current_weather.weathercode] || "Heiter bis wolkig";
+  }
+}
+
+// ===== HABITS JS (Quick) =====
+function addQuickHabit(name) {
+  if (!state.habits) state.habits = [];
+  state.habits.push({ id: Date.now(), name, completedDates: [] });
+  save(); renderHabits();
+}
+
+// ===== HOME JS =====
+function updateHome() {
+  const now = new Date();
+  
+  // Clock
+  const clock = document.getElementById('home-clock');
+  if (clock) {
+    clock.textContent = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+  }
+  
+  // Greeting
+  const greeting = document.getElementById('home-greeting');
+  if (greeting) {
+    const hr = now.getHours();
+    let g = "Guten Abend";
+    if (hr >= 5 && hr < 12) g = "Guten Morgen";
+    else if (hr >= 12 && hr < 18) g = "Guten Tag";
+    greeting.textContent = `${g}, Raman`;
+  }
+  
+  // Date
+  const dateEl = document.getElementById('home-date');
+  if (dateEl) {
+    dateEl.textContent = now.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  
+  // Summaries
+  if (document.getElementById('summary-todos')) {
+    const openTodos = state.todos.filter(t => !t.done).length;
+    document.getElementById('summary-todos').textContent = openTodos;
+    
+    const todayStr = toDateStr(now);
+    const todayEvents = (state.events[todayStr] || []).length;
+    document.getElementById('summary-events').textContent = todayEvents;
+    
+    if (state.habits && state.habits.length > 0) {
+      const doneToday = state.habits.filter(h => h.completedDates.includes(todayStr)).length;
+      const perc = Math.round((doneToday / state.habits.length) * 100);
+      document.getElementById('summary-habits').textContent = perc + "%";
+    } else {
+      document.getElementById('summary-habits').textContent = "0%";
+    }
+  }
+}
+
+setInterval(updateHome, 60000);
 
 // PWA Service Worker Registration
 if ('serviceWorker' in navigator) {
